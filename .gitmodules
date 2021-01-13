@@ -1,3 +1,0 @@
-[submodule "phpMysql"]
-	path = phpMysql
-	url = git@github.com:dublinbranch/phpMysql.git
