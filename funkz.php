@@ -59,7 +59,9 @@ function getRequestIp(): string
 
 function getIp(): string
 {
-    if (getenv('HTTP_CLIENT_IP')) {
+    if ( $_REQUEST['ip'] && filter_var( $_REQUEST['ip'], FILTER_VALIDATE_IP) ) {
+        $ip = $_REQUEST['ip'];
+    } else if (getenv('HTTP_CLIENT_IP')) {
         $ip = getenv('HTTP_CLIENT_IP');
     } else if (getenv('HTTP_X_FORWARDED_FOR')) {
         $ip = getenv('HTTP_X_FORWARDED_FOR');
@@ -71,9 +73,10 @@ function getIp(): string
         $ip = getenv('HTTP_FORWARDED');
     } else if (getenv('REMOTE_ADDR')) {
         $ip = getenv('REMOTE_ADDR');
-    } else {
+    } else  {
         $ip = '';
     }
+    return $ip;
 }
 
 function getUserAgent(): string
