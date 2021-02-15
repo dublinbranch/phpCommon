@@ -1,6 +1,7 @@
 <?php
-
-/** Heredoc Hack
+if(!function_exists("dummyPhpCommonFunkz")){
+	function dummyPhpCommonFunkz(){};
+	/** Heredoc Hack
  * @param $data
  * @return mixed
  */
@@ -82,4 +83,13 @@ function getIp(): string
 function getUserAgent(): string
 {
     return $_SERVER["HTTP_USER_AGENT"] ?? '';
+}
+/** Heredoc Hack
+ * @param $data
+ * @return mixed
+ */
+$fn = function ($data) {
+    return $data;
+};
+
 }
