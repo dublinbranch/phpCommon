@@ -59,7 +59,7 @@ function getRequestIp(): string
 
 function getIp(): string
 {
-    if ( $_REQUEST['ip'] && filter_var( $_REQUEST['ip'], FILTER_VALIDATE_IP) ) {
+    if (isset($_REQUEST['ip']) && filter_var( $_REQUEST['ip'], FILTER_VALIDATE_IP) ) {
         $ip = $_REQUEST['ip'];
     } else if (getenv('HTTP_CLIENT_IP')) {
         $ip = getenv('HTTP_CLIENT_IP');
