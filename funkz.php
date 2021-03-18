@@ -1,5 +1,4 @@
 <?php
-require_once( __DIR__ . '/config.php');
 if (!function_exists("dummyPhpCommonFunkz")) {
     function dummyPhpCommonFunkz()
     {
@@ -81,25 +80,6 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return $_SERVER["HTTP_USER_AGENT"] ?? '';
     }
 
-    function sendToSlack(string $txt): void
-    {
-        if (strlen($txt) == 0) {
-            return;
-        }
-        if( ErrorHandler::isSetSlackData() ){
-            $url = ErrorHandler::$slackData["url"];
-            $data = array(
-                "text" => ErrorHandler::$slackData["who"] . " " . date("Y-m-dTH:i:s") . " {$txt}\n",
-                "channel" => ErrorHandler::$slackData["channel"],
-                "username" => ErrorHandler::$slackData["username"]
-            );
-            $curl = curl_init($url);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            $a = curl_exec($curl);
-            curl_close($curl);
-        }
-    }
+
 
 }
