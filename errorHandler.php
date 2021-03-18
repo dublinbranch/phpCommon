@@ -1,5 +1,5 @@
 <?php
-
+	//ASSOLUTAMENTE QUESTO FILE DEVE ESSERE STAND ALONE, OGIN DIPENDENZA PUÒ ESSER BUGGA E SCASSARLO
 
     function sendToSlack(string $txt, $config): void
     {
