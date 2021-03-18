@@ -1,5 +1,5 @@
 <?php
-//ASSOLUTAMENTE QUESTO FILE DEVE ESSERE STAND ALONE, OGIN DIPENDENZA PUÒ ESSER BUGGA E SCASSARLO
+//ASSOLUTAMENTE QUESTO FILE DEVE ESSERE STAND ALONE, OGNI DIPENDENZA PUÒ ESSER BUGGA E SCASSARLO
 
 function sendToSlack(string $txt, object $config): void
 {
@@ -24,7 +24,8 @@ function errorFilter(&$errorMessage): void
     $excludeds = array(
         "file_get_contents(https://www.bingapis.com/api/V7/ads/adsimpressionfeedback",
         "file_get_contents(): Failed to enable crypto",
-        "file_get_contents(): SSL: Connection reset by peer in"
+        "file_get_contents(): SSL: Connection reset by peer in",
+        "file_get_contents(https://www.bingapis.com/api/ping"
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
