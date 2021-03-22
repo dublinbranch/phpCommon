@@ -47,8 +47,9 @@ function handleError(?array $error): void
             if (strlen($error["message"]) > 0 && (!$lastTS || $difference > $config->TTL)) {
                 apcu_store($key, time());
                 $f = $_SERVER["SCRIPT_FILENAME"];
-                mail($config->mail, "FATAL PHP ERROR", "calling $f " . $error["message"]);
-                sendToSlack("calling $f " . $error["message"], $config);
+		$msg = "{$error['message']} in {$error['file']}:{$error['line']}";
+                mail($config->mail, "FATAL PHP ERROR", "calling $f " . $msg);
+                sendToSlack("calling $f " . $msg, $config);
             }
         }
     }
