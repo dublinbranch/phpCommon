@@ -1,9 +1,8 @@
 <?php
 
-require_once(__DIR__ . '/phpMysql/dbwrapper.php');
-
-function runnable(string $key, int $second, DBWrapper $db, bool $log = true)
+function runnable(string $key, int $second, bool $log = true)
 {
+    $db = DBS7();
     $now = time();
     $skel = <<<EOD
 SELECT
@@ -21,7 +20,7 @@ EOD;
     $result = $db->getLine($sql);
     if (empty($result) || $result->lastRun + $second < $now) {
         if ($log) {
-            logRun($key, $now, $db);
+            logRun($key, $now);
         }
         return true;
     }
@@ -31,6 +30,7 @@ EOD;
 
 function logRun(string $key, int $now, DBWrapper $db)
 {
+    $db = DBS7();
     $skel = <<<EOD
 INSERT INTO
     maintenance.timing
