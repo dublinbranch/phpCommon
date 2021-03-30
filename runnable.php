@@ -2,7 +2,7 @@
 
 function runnable(string $key, int $second, bool $log = true)
 {
-    $db = DBS7();
+    $db = s7DB();
     $now = time();
     $skel = <<<EOD
 SELECT
@@ -28,9 +28,9 @@ EOD;
 }
 
 
-function logRun(string $key, int $now, DBWrapper $db)
+function logRun(string $key, int $now)
 {
-    $db = DBS7();
+    $db = s7DB();
     $skel = <<<EOD
 INSERT INTO
     maintenance.timing
