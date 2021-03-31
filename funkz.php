@@ -80,6 +80,10 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return $_SERVER["HTTP_USER_AGENT"] ?? '';
     }
 
-
+    function isExpectedPage(string $expected) : bool{
+        $le = strlen($expected);
+        $sub = substr($_SERVER["REQUEST_URI"],0, $le );
+        return $sub == $expected;
+    }
 
 }
