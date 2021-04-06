@@ -47,13 +47,15 @@ function handleError(?array $error): void
             if (strlen($error["message"]) > 0 && (!$lastTS || $difference > $config->TTL)) {
                 apcu_store($key, time());
                 $f = $_SERVER["SCRIPT_FILENAME"];
-		$msg = "{$error['message']} in {$error['file']}:{$error['line']}";
+		$msg = "{$error['message']} in {$error['file']}:{$error['line']} \n For page " . $_SERVER["REQUEST_URI"];
                 mail($config->mail, "FATAL PHP ERROR", "calling $f " . $msg);
                 sendToSlack("calling $f " . $msg, $config);
             }
         }
     }
 }
+
+
 
 register_shutdown_function(function () {
     $error = error_get_last();

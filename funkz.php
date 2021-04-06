@@ -57,6 +57,7 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     {
         if (isset($_REQUEST['ip']) && filter_var($_REQUEST['ip'], FILTER_VALIDATE_IP)) {
             $ip = $_REQUEST['ip'];
+	    //The followings are HEADER, not parameter
         } else if (getenv('HTTP_CLIENT_IP')) {
             $ip = getenv('HTTP_CLIENT_IP');
         } else if (getenv('HTTP_X_FORWARDED_FOR')) {
@@ -77,9 +78,19 @@ if (!function_exists("dummyPhpCommonFunkz")) {
 
     function getUserAgent(): string
     {
-        return $_SERVER["HTTP_USER_AGENT"] ?? '';
+    if (isset($_REQUEST['HTTP_USER_AGENT'])) {
+	    return $_REQUEST['HTTP_USER_AGENT'];
+	} else {
+	    return $_SERVER["HTTP_USER_AGENT"] ?? '';
+	}
     }
 
 
+//Nginx rewrite are a bit funky sometimes
+	function isExpectedPage(string $expected) : bool{
+	    $le = strlen($expected);
+	    $sub = substr($_SERVER["REQUEST_URI"],0, $le );
+	    return $sub == $expected;
+	}
 
 }
