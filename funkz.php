@@ -86,11 +86,11 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     }
 
 
-//Nginx rewrite are a bit funky sometimes
-	function isExpectedPage(string $expected) : bool{
-	    $le = strlen($expected);
-	    $sub = substr($_SERVER["REQUEST_URI"],0, $le );
-	    return $sub == $expected;
-	}
+	//Nginx rewrite are a bit funky sometimes
+    function isExpectedPage(string $expected) : bool{
+        $le = strlen($expected);
+        $sub = substr($_SERVER["REQUEST_URI"],0, $le );
+        return $sub == $expected;
+    }
 
 }
