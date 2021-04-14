@@ -4,21 +4,24 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     {
     }
 
-    function request_ifset(string $what, bool $numeric = false, $default = NULL): ?string
+    function request_ifset(string $what, bool $numeric = false, $default = NULL)
     {
 
         if ($numeric && !isset($_REQUEST[$what])) {
-            return $default;
+            return (int)$default;
         }
 
         if ($numeric && !is_numeric($_REQUEST[$what])) {
-            return $default;
+            return (int)$default;
         }
 
         if (isset($_REQUEST[$what])) {
             if ($_REQUEST[$what] === 0 || $_REQUEST[$what] == '0') {
                 return ( int )0;
             } else {
+                if($numeric){
+                    return (int) $_REQUEST[$what];
+                }
                 return $_REQUEST[$what];
             }
         }
@@ -30,7 +33,7 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return false;
     }
 
-    function request_required(string $what, bool $numeric = false): string
+    function request_required(string $what, bool $numeric = false)
     {
         $res = request_ifset($what, $numeric, false);
         if (!$res) {
