@@ -73,6 +73,10 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         } else {
             $ip = '';
         }
+	//In case of multiple forwarding
+	if(strpos($ip, ",") !== false){
+		return explode(",", $ip)[0];
+	}
         return $ip;
     }
 
