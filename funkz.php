@@ -96,4 +96,7 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return $sub == $expected;
     }
 
+    function isDefinedAndTrue(string $const) : bool{
+        return defined($const) && constant($const);
+    }
 }
