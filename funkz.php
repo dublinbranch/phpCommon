@@ -8,22 +8,18 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     {
 
         if ($numeric && !isset($_REQUEST[$what])) {
-            return (int)$default;
+            return $default;
         }
 
         if ($numeric && !is_numeric($_REQUEST[$what])) {
-            return (int)$default;
+            return $default;
         }
 
         if (isset($_REQUEST[$what])) {
-            if ($_REQUEST[$what] === 0 || $_REQUEST[$what] == '0') {
-                return ( int )0;
-            } else {
-                if($numeric){
-                    return (int) $_REQUEST[$what];
-                }
-                return $_REQUEST[$what];
+            if ($numeric) {
+                return (int)$_REQUEST[$what];
             }
+            return $_REQUEST[$what];
         }
 
         if ($default) {
@@ -60,7 +56,7 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     {
         if (isset($_REQUEST['ip']) && filter_var($_REQUEST['ip'], FILTER_VALIDATE_IP)) {
             $ip = $_REQUEST['ip'];
-	    //The followings are HEADER, not parameter
+            //The followings are HEADER, not parameter
         } else if (getenv('HTTP_CLIENT_IP')) {
             $ip = getenv('HTTP_CLIENT_IP');
         } else if (getenv('HTTP_X_FORWARDED_FOR')) {
@@ -76,31 +72,33 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         } else {
             $ip = '';
         }
-	//In case of multiple forwarding
-	if(strpos($ip, ",") !== false){
-		return explode(",", $ip)[0];
-	}
+        //In case of multiple forwarding
+        if (strpos($ip, ",") !== false) {
+            return explode(",", $ip)[0];
+        }
         return $ip;
     }
 
     function getUserAgent(): string
     {
-    if (isset($_REQUEST['HTTP_USER_AGENT'])) {
-	    return $_REQUEST['HTTP_USER_AGENT'];
-	} else {
-	    return $_SERVER["HTTP_USER_AGENT"] ?? '';
-	}
+        if (isset($_REQUEST['HTTP_USER_AGENT'])) {
+            return $_REQUEST['HTTP_USER_AGENT'];
+        } else {
+            return $_SERVER["HTTP_USER_AGENT"] ?? '';
+        }
     }
 
 
-	//Nginx rewrite are a bit funky sometimes
-    function isExpectedPage(string $expected) : bool{
+    //Nginx rewrite are a bit funky sometimes
+    function isExpectedPage(string $expected): bool
+    {
         $le = strlen($expected);
-        $sub = substr($_SERVER["REQUEST_URI"],0, $le );
+        $sub = substr($_SERVER["REQUEST_URI"], 0, $le);
         return $sub == $expected;
     }
 
-    function isDefinedAndTrue(string $const) : bool{
+    function isDefinedAndTrue(string $const): bool
+    {
         return defined($const) && constant($const);
     }
 }
