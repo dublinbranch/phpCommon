@@ -28,7 +28,13 @@ function invalidError($errorMessage): bool
         "file_get_contents(https://www.bingapis.com/api/ping",
 	"pinocchio/geppetto",
 	"https://askprivate.com/postback?cid=CLICKID",
-	"http://aj2284.online/at?subId="
+	"http://aj2284.online/at?subId=",
+	"http://eu.rollerads.com/conversion/",
+	"techAdsRepanel2",
+	"/repanel/",
+	"/pinocchio",
+	"carlo.php",
+	"offers.cfactory.affise.com/postback?clickid"
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
