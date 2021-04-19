@@ -105,7 +105,10 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     function definedEqualTo(string $var, $value): bool
     {
         $defined = defined($var);
-        $equal = constant($var) === $value;
+        $equal = false;
+        if ($defined) {
+            $equal = constant($var) === $value;
+        }
         $res = $defined && $equal;
         return $res;
     }
