@@ -37,7 +37,9 @@ function invalidError($errorMessage): bool
 	"offers.cfactory.affise.com/postback?clickid",
 	"eu.rollerads.com/conversion",
 	"postback.zeroredirect1.com/zppostback",
-	"trc.taboola.com/actions-handler"
+	"trc.taboola.com/actions-handler",
+	"/seek?q=ciao%20bruno",
+	"swiftlinux.com"
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
