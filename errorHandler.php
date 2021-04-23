@@ -39,7 +39,9 @@ function invalidError($errorMessage): bool
 	"postback.zeroredirect1.com/zppostback",
 	"trc.taboola.com/actions-handler",
 	"/seek?q=ciao%20bruno",
-	"swiftlinux.com"
+	"swiftlinux.com",
+	"/ar?gclid=&layout=&mkt=&o=&q=&rtb="
+
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
