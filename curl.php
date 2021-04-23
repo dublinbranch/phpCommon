@@ -36,6 +36,7 @@ EOD;
         return $msg;
 
     }
+
     public function getTiming(): string
     {
         $msg = <<<EOD
@@ -52,11 +53,16 @@ EOD;
 }
 
 
-function pinger1(PingerReq $req): PingerRes
+function pinger1(PingerReq $req, $curl = null): PingerRes
 {
     $res = new PingerRes();
     $res->req = $req;
-    $ch = curl_init();
+    if ($curl) {
+        $ch = $curl;
+    } else {
+        $ch = curl_init();
+    }
+
     curl_setopt($ch, CURLOPT_URL, $req->url);
     //else will print the res -.-
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -76,6 +82,8 @@ function pinger1(PingerReq $req): PingerRes
         }
         $res->error = curl_error($ch);
     }
-    curl_close($ch);
+    if (!$curl) {
+        curl_close($ch);
+    }
     return $res;
 }
