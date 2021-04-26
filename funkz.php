@@ -31,8 +31,8 @@ if (!function_exists("dummyPhpCommonFunkz")) {
 
     function request_required(string $what, bool $numeric = false)
     {
-        $res = request_ifset($what, $numeric, false);
-        if (!$res) {
+        $res = request_ifset($what, $numeric, null);
+        if (is_null($res)) {
             die("Missing required parameter: {$what}");
         }
         return $res;
