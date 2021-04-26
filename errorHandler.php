@@ -49,6 +49,19 @@ function invalidError($errorMessage): bool
     return false;
 }
 
+function invalidReferer(string $refer) : bool{
+    $excludeds = array(
+	"swiftlinux.com"
+	);
+    foreach ($excludeds as $excluded) {
+        if (stripos($refer, $excluded) !== false) {
+		return true;
+        }
+    }
+    return false;
+}
+
+
 function handleError(?array $error): void
 {
     if (isset($error["type"])) {
@@ -59,6 +72,9 @@ function handleError(?array $error): void
 		return;
 	    }
 	    if(invalidError($_SERVER["SCRIPT_FILENAME"])){
+		return;
+	    }
+	    if(invalidReferer($_SERVER['HTTP_REFERER'])){
 		return;
 	    }
 	    
