@@ -51,7 +51,10 @@ function invalidError($errorMessage): bool
     return false;
 }
 
-function invalidReferer(string $refer) : bool{
+function invalidReferer(?string $refer) : bool{
+	if(!$refer){
+		return true;
+	}
     $excludeds = array(
 	"swiftlinux.com"
 	);
