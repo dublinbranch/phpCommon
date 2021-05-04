@@ -27,7 +27,7 @@ function invalidError($errorMessage): bool
         "file_get_contents(): SSL: Connection reset by peer in",
         "file_get_contents(https://www.bingapis.com/api/ping",
 	"pinocchio/geppetto",
-	"https://askprivate.com/postback?cid=CLICKID",
+	"https://askprivate.com/postback?cid",
 	"http://aj2284.online/at?subId=",
 	"http://eu.rollerads.com/conversion/",
 	"techAdsRepanel2",
@@ -51,7 +51,10 @@ function invalidError($errorMessage): bool
     return false;
 }
 
-function invalidReferer(string $refer) : bool{
+function invalidReferer(?string $refer) : bool{
+	if(!$refer){
+		return true;
+	}
     $excludeds = array(
 	"swiftlinux.com"
 	);
@@ -76,7 +79,7 @@ function handleError(?array $error): void
 	    if(invalidError($_SERVER["SCRIPT_FILENAME"])){
 		return;
 	    }
-	    if(invalidReferer($_SERVER['HTTP_REFERER'])){
+	    if(invalidReferer(@$_SERVER['HTTP_REFERER'])){
 		return;
 	    }
 	    
