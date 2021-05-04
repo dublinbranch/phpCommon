@@ -67,7 +67,7 @@ EOD;
         $this->code = $this->info["http_code"];
         $this->error = curl_error($ch);
         $_2xx = ((int)$this->code / 100) == 2;
-        if ($this->res && $_2xx) {
+        if ($_2xx) {
             $this->ok = true;
         }
     }
