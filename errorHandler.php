@@ -27,7 +27,7 @@ function invalidError($errorMessage): bool
         "file_get_contents(): SSL: Connection reset by peer in",
         "file_get_contents(https://www.bingapis.com/api/ping",
 	"pinocchio/geppetto",
-	"https://askprivate.com/postback?cid=CLICKID",
+	"https://askprivate.com/postback?cid",
 	"http://aj2284.online/at?subId=",
 	"http://eu.rollerads.com/conversion/",
 	"techAdsRepanel2",
@@ -37,7 +37,11 @@ function invalidError($errorMessage): bool
 	"offers.cfactory.affise.com/postback?clickid",
 	"eu.rollerads.com/conversion",
 	"postback.zeroredirect1.com/zppostback",
-	"trc.taboola.com/actions-handler"
+	"trc.taboola.com/actions-handler",
+	"/seek?q=ciao%20bruno",
+	"swiftlinux.com",
+	"/ar?gclid=&layout=&mkt=&o=&q=&rtb="
+
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
@@ -46,6 +50,22 @@ function invalidError($errorMessage): bool
     }
     return false;
 }
+
+function invalidReferer(?string $refer) : bool{
+	if(!$refer){
+		return false;
+	}
+    $excludeds = array(
+	"swiftlinux.com"
+	);
+    foreach ($excludeds as $excluded) {
+        if (stripos($refer, $excluded) !== false) {
+		return true;
+        }
+    }
+    return false;
+}
+
 
 function handleError(?array $error): void
 {
@@ -57,6 +77,9 @@ function handleError(?array $error): void
 		return;
 	    }
 	    if(invalidError($_SERVER["SCRIPT_FILENAME"])){
+		return;
+	    }
+	    if(invalidReferer(@$_SERVER['HTTP_REFERER'])){
 		return;
 	    }
 	    
