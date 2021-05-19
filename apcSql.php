@@ -15,4 +15,17 @@ if (!function_exists("dummyApcSqlFunkz")) {
         apcu_store($sql,$res,$ttl);
         return $res;
     }
+
+    //This return array<object>
+    function apcCachedMulti(string $sql, DBWrapper $db, int $ttl = 60)
+    {
+        //we do not store boolean never, so this is ok, at most we have NULL...
+        $res = apcu_fetch($sql);
+        if ($res !== false) {
+            return $res;
+        }
+        $res = $db->getAllObj($sql);
+        apcu_store($sql,$res,$ttl);
+        return $res;
+    }
 }
