@@ -112,4 +112,12 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         $res = $defined && $equal;
         return $res;
     }
+    
+    function sessionSafeStart(){
+		if ( php_sapi_name() !== 'cli' ) {
+			if(session_status() === PHP_SESSION_NONE){
+				session_start();
+			}
+		}
+    }
 }
