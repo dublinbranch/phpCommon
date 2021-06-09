@@ -40,7 +40,8 @@ function invalidError($errorMessage): bool
 	"trc.taboola.com/actions-handler",
 	"/seek?q=ciao%20bruno",
 	"swiftlinux.com",
-	"/ar?gclid=&layout=&mkt=&o=&q=&rtb="
+	"/ar?gclid=&layout=&mkt=&o=&q=&rtb=",
+	"adminer_plugins"
 
     );
     foreach ($excludeds as $excluded) {
