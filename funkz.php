@@ -29,6 +29,16 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return false;
     }
 
+    function request_ifsetMulti(array $elements, bool $numeric = false, $default = NULL){
+        foreach ($elements as $element) {
+            $value = request_ifset($element, $numeric);
+            if(!empty($value)){
+                return $value;
+            }
+        }
+        return $default;
+    }
+
     function request_required(string $what, bool $numeric = false)
     {
         $res = request_ifset($what, $numeric, null);
