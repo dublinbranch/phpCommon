@@ -10,6 +10,6 @@ function ensureSingleRun(string $filename) : void
     }
     $locked = flock($fp, LOCK_EX | LOCK_NB);
     if (!$locked) {  // acquire an exclusive lock
-        die("Couldn't get the lock!");
+        die("Couldn't get the lock!\n");
     }
 }
