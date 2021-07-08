@@ -85,7 +85,7 @@ EOD;
 }
 
 
-function pinger1(PingerReq $req, $curl = null): PingerRes
+function pinger1(PingerReq $req, $curl = null, array $curlOpts = array()): PingerRes
 {
     $res = new PingerRes();
     $res->req = $req;
@@ -98,7 +98,11 @@ function pinger1(PingerReq $req, $curl = null): PingerRes
     curl_setopt($ch, CURLOPT_URL, $req->url);
     //else will print the res -.-
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-
+    if( sizeof($curlOpts) > 0 ){
+        foreach( $curlOpts as $curlOpt => $curlOptValue) {
+            curl_setopt($ch, $curlOpt, $curlOptValue);
+        }
+    }
     for (; $res->tries < $req->maxTries; $res->tries++) {
         $r = curl_exec($ch);
         if ($r !== false) {
