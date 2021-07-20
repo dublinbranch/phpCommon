@@ -13,3 +13,37 @@ function ensureSingleRun(string $filename) : void
         die("Couldn't get the lock!\n");
     }
 }
+
+class TechAdsFlock
+{
+    private string $filename;
+    private bool $locked;
+    private $fp;
+    private bool $valid = false;
+
+    public function __construct(string $filename)
+    {
+        $this->filename = $filename;
+        $this->fp = fopen($this->filename, "c+");
+        if ($this->fp) {
+            $this->valid = true;
+        }
+    }
+
+    public function lock(): bool
+    {
+        $this->locked = flock($this->fp, LOCK_EX | LOCK_NB);
+        return $this->locked;
+    }
+
+    public function unlock(): bool
+    {
+        $this->locked = flock($this->fp, LOCK_UN);
+        return $this->locked;
+    }
+
+    public function isValid(): bool
+    {
+        return $this->valid;
+    }
+}
