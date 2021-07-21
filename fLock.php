@@ -32,20 +32,22 @@ class TechAdsFlock
 
     public function __destruct()
     {
-        if ($this->locked) {
-            $this->unlock();
-        }
+        $this->unlock();
     }
 
     public function lock(): bool
     {
-        $this->locked = flock($this->fp, LOCK_EX | LOCK_NB);
+        if (!$this->locked) {
+            $this->locked = flock($this->fp, LOCK_EX | LOCK_NB);
+        }
         return $this->locked;
     }
 
     public function unlock(): bool
     {
-        $this->locked = flock($this->fp, LOCK_UN);
+        if ($this->locked) {
+            $this->locked = flock($this->fp, LOCK_UN);
+        }
         return $this->locked;
     }
 
