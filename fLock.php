@@ -1,8 +1,8 @@
 <?php
-function ensureSingleRun(string $filename) : void
+function ensureSingleRun(string $filename): void
 {
     //THIS LINE MUST BE KEPT! else the fp will go out of scope and be auto closed!
-    GLOBAL $fp;
+    global $fp;
     $file = __DIR__ . "/$filename";
     $fp = fopen($file, "c+");
     if (!$fp) {
@@ -27,6 +27,13 @@ class TechAdsFlock
         $this->fp = fopen($this->filename, "c+");
         if ($this->fp) {
             $this->valid = true;
+        }
+    }
+
+    public function __destruct()
+    {
+        if ($this->locked) {
+            $this->unlock();
         }
     }
 
