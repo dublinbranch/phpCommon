@@ -17,7 +17,7 @@ function ensureSingleRun(string $filename): void
 class TechAdsFlock
 {
     private string $filename;
-    private bool $locked;
+    private bool $locked = false;
     private $fp;
     private bool $valid = false;
 
