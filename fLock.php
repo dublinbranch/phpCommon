@@ -27,6 +27,8 @@ class TechAdsFlock
         $this->fp = fopen($this->filename, "c+");
         if ($this->fp) {
             $this->valid = true;
+        }else{
+            die("Impossible to open / create the file {$this->filename}, does the folder exist ? Is accessible ? The folder need to be writable!");
         }
     }
 
