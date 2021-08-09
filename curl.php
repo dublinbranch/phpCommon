@@ -26,7 +26,7 @@ class PingerRes
 
     public function packDebugMsg(): string
     {
-        if($this->dummy){
+        if ($this->dummy) {
             return "";
         }
         $header = "";
@@ -98,8 +98,8 @@ function pinger1(PingerReq $req, $curl = null, array $curlOpts = array()): Pinge
     curl_setopt($ch, CURLOPT_URL, $req->url);
     //else will print the res -.-
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    if( sizeof($curlOpts) > 0 ){
-        foreach( $curlOpts as $curlOpt => $curlOptValue) {
+    if (sizeof($curlOpts) > 0) {
+        foreach ($curlOpts as $curlOpt => $curlOptValue) {
             curl_setopt($ch, $curlOpt, $curlOptValue);
         }
     }
@@ -113,7 +113,7 @@ function pinger1(PingerReq $req, $curl = null, array $curlOpts = array()): Pinge
             break;
         }
     }
-    if (!$curl) {
+    if (!empty($curl)) {
         curl_close($ch);
     }
     return $res;
