@@ -24,8 +24,9 @@ if (!function_exists("dummyApcSqlFunkz")) {
         if ($res !== false) {
             return $res;
         }
+        $sqlCopy = $sql;
         $res = $db->getAllObj($sql);
-        apcu_store($sql,$res,$ttl);
+        apcu_store($sqlCopy,$res,$ttl);
         return $res;
     }
 }
