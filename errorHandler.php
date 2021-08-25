@@ -1,6 +1,16 @@
 <?php
 //ASSOLUTAMENTE QUESTO FILE DEVE ESSERE STAND ALONE, OGNI DIPENDENZA PUÒ ESSER BUGGA E SCASSARLO
 
+if (!function_exists("dummyErrorHandler")) {
+    function dummyApcSqlFunkz()
+    {
+    }
+	//This will load an array like
+	//$slackConfig["hard"] ...
+	//$slackConfig["developTest"] ...
+	require_once(__DIR__ . "/configErrorHandler.php");
+}
+
 function sendToSlack(string $txt, object $config): void
 {
     if (strlen($txt) == 0) {
@@ -80,7 +90,8 @@ function invalidReferer(?string $refer) : bool{
 function handleError(?array $error): void
 {
     if (isset($error["type"])) {
-        $config = json_decode(file_get_contents(__DIR__ . "/config.json"));
+	global $config;
+        $config = $slackConfig["hard"];
         if ($config->active) {
             
 	    if(invalidError($error["message"])){
