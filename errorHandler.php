@@ -19,6 +19,15 @@ function sendToSlack(string $txt, object $config): void
     curl_close($curl);
 }
 
+
+function sendToSlackApcu(string $message, string $apcuKey, int $ttl, object $config ): void
+{
+    if (!apcu_exists($apcuKey)) {
+        apcu_store($apcuKey, true, $ttl);
+        sendToSlack($message, $config);
+    }
+}
+
 function invalidError($errorMessage): bool
 {
     $excludeds = array(
