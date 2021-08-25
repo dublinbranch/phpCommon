@@ -90,7 +90,7 @@ function invalidReferer(?string $refer) : bool{
 function handleError(?array $error): void
 {
     if (isset($error["type"])) {
-	global $config;
+	global $slackConfig;
         $config = $slackConfig["hard"];
         if ($config->active) {
             
