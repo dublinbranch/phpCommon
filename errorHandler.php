@@ -5,10 +5,11 @@ if (!function_exists("dummyErrorHandler")) {
     function dummyErrorHandlerFunkz()
     {
     }
-	//This will load an array like
-	//$slackConfig["hard"] ...
-	//$slackConfig["developTest"] ...
-	require_once(__DIR__ . "/configErrorHandler.php");
+
+    //This will load an array like
+    //$slackConfig["hard"] ...
+    //$slackConfig["developTest"] ...
+    require_once(__DIR__ . "/configErrorHandler.php");
 }
 
 function sendToSlack(string $txt, object $config): void
@@ -30,10 +31,10 @@ function sendToSlack(string $txt, object $config): void
 }
 
 
-function sendToSlackApcu(string $message, string $apcuKey, int $ttl, object $config ): void
+function sendToSlackApcu(string $message, string $apcuKey, ErrorHandlerConfig $config): void
 {
     if (!apcu_exists($apcuKey)) {
-        apcu_store($apcuKey, true, $ttl);
+        apcu_store($apcuKey, true, $config->ttl);
         sendToSlack($message, $config);
     }
 }
@@ -45,42 +46,43 @@ function invalidError($errorMessage): bool
         "file_get_contents(): Failed to enable crypto",
         "file_get_contents(): SSL: Connection reset by peer in",
         "file_get_contents(https://www.bingapis.com/api/ping",
-	"pinocchio/geppetto",
-	"https://askprivate.com/postback?cid",
-	"http://aj2284.online/at?subId=",
-	"http://eu.rollerads.com/conversion/",
-	"techAdsRepanel2",
-	"/repanel/",
-	"/pinocchio",
-	"carlo.php",
-	"offers.cfactory.affise.com/postback?clickid",
-	"eu.rollerads.com/conversion",
-	"postback.zeroredirect1.com/zppostback",
-	"trc.taboola.com/actions-handler",
-	"/seek?q=ciao%20bruno",
-	"swiftlinux.com",
-	"/ar?gclid=&layout=&mkt=&o=&q=&rtb=",
-	"adminer_plugins"
+        "pinocchio/geppetto",
+        "https://askprivate.com/postback?cid",
+        "http://aj2284.online/at?subId=",
+        "http://eu.rollerads.com/conversion/",
+        "techAdsRepanel2",
+        "/repanel/",
+        "/pinocchio",
+        "carlo.php",
+        "offers.cfactory.affise.com/postback?clickid",
+        "eu.rollerads.com/conversion",
+        "postback.zeroredirect1.com/zppostback",
+        "trc.taboola.com/actions-handler",
+        "/seek?q=ciao%20bruno",
+        "swiftlinux.com",
+        "/ar?gclid=&layout=&mkt=&o=&q=&rtb=",
+        "adminer_plugins"
 
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
-		return true;
+            return true;
         }
     }
     return false;
 }
 
-function invalidReferer(?string $refer) : bool{
-	if(!$refer){
-		return false;
-	}
+function invalidReferer(?string $refer): bool
+{
+    if (!$refer) {
+        return false;
+    }
     $excludeds = array(
-	"swiftlinux.com"
-	);
+        "swiftlinux.com"
+    );
     foreach ($excludeds as $excluded) {
         if (stripos($refer, $excluded) !== false) {
-		return true;
+            return true;
         }
     }
     return false;
@@ -90,35 +92,34 @@ function invalidReferer(?string $refer) : bool{
 function handleError(?array $error): void
 {
     if (isset($error["type"])) {
-	global $slackConfig;
+        global $slackConfig;
         $config = $slackConfig["hard"];
         if ($config->active) {
-            
-	    if(invalidError($error["message"])){
-		return;
-	    }
-	    if(invalidError($_SERVER["SCRIPT_FILENAME"])){
-		return;
-	    }
-	    if(invalidReferer(@$_SERVER['HTTP_REFERER'])){
-		return;
-	    }
-	    
+
+            if (invalidError($error["message"])) {
+                return;
+            }
+            if (invalidError($_SERVER["SCRIPT_FILENAME"])) {
+                return;
+            }
+            if (invalidReferer(@$_SERVER['HTTP_REFERER'])) {
+                return;
+            }
+
             $key = 'errorTrackerTS';
             $lastTS = apcu_fetch($key);
             $difference = time() - $lastTS;
             if (strlen($error["message"]) > 0 && (!$lastTS || $difference > $config->TTL)) {
                 apcu_store($key, time());
-		$f = $_SERVER["SCRIPT_FILENAME"];
+                $f = $_SERVER["SCRIPT_FILENAME"];
                 $ref = isset($_SERVER['HTTP_REFERER']) ? ("and referrer " . $_SERVER['HTTP_REFERER']) : NULL;
-		$msg = "{$error['message']} in {$error['file']}:{$error['line']} \n For page " . $_SERVER["REQUEST_URI"] . $ref ;
+                $msg = "{$error['message']} in {$error['file']}:{$error['line']} \n For page " . $_SERVER["REQUEST_URI"] . $ref;
                 mail($config->mail, "FATAL PHP ERROR", "calling $f " . $msg);
                 sendToSlack("calling $f " . $msg, $config);
             }
         }
     }
 }
-
 
 
 register_shutdown_function(function () {
