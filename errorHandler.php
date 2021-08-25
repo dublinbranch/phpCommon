@@ -2,7 +2,7 @@
 //ASSOLUTAMENTE QUESTO FILE DEVE ESSERE STAND ALONE, OGNI DIPENDENZA PUÒ ESSER BUGGA E SCASSARLO
 
 if (!function_exists("dummyErrorHandler")) {
-    function dummyApcSqlFunkz()
+    function dummyErrorHandlerFunkz()
     {
     }
 	//This will load an array like
