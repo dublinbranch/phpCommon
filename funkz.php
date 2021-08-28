@@ -6,27 +6,17 @@ if (!function_exists("dummyPhpCommonFunkz")) {
 
     function request_ifset(string $what, bool $numeric = false, $default = NULL)
     {
-
-        if ($numeric && !isset($_REQUEST[$what])) {
-            return $default;
-        }
-
-        if ($numeric && !is_numeric($_REQUEST[$what])) {
-            return $default;
-        }
-
         if (isset($_REQUEST[$what])) {
             if ($numeric) {
                 return (int)$_REQUEST[$what];
             }
             return $_REQUEST[$what];
+        }else{
+            if (!is_null($default)) {
+                return $default;
+            }
         }
-
-        if ($default) {
-            return $default;
-        }
-
-        return false;
+        return null;
     }
 
     function request_ifsetMulti(array $elements, bool $numeric = false, $default = NULL){
