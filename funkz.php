@@ -11,7 +11,7 @@ if (!function_exists("dummyPhpCommonFunkz")) {
                 return (int)$_REQUEST[$what];
             }
             return $_REQUEST[$what];
-        }else{
+        } else {
             if (!is_null($default)) {
                 return $default;
             }
@@ -19,14 +19,24 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return null;
     }
 
-    function request_ifsetMulti(array $elements, bool $numeric = false, $default = NULL){
+    function request_ifsetMulti(array $elements, bool $numeric = false, $default = NULL)
+    {
         foreach ($elements as $element) {
             $value = request_ifset($element, $numeric);
-            if(!empty($value)){
+            if (!empty($value)) {
                 return $value;
             }
         }
         return $default;
+    }
+
+    function request_requiredAny(array $elements, bool $numeric = false)
+    {
+        $res = request_ifsetMulti($elements, $numeric, NULL);
+        if (is_null($res)) {
+            die("Missing required parameter:" . print_r($elements));
+        }
+        return $res;
     }
 
     function request_required(string $what, bool $numeric = false)
@@ -112,13 +122,14 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         $res = $defined && $equal;
         return $res;
     }
-    
-    function sessionSafeStart(){
-		if ( php_sapi_name() !== 'cli' ) {
-			if(session_status() === PHP_SESSION_NONE){
-				session_start();
-			}
-		}
+
+    function sessionSafeStart()
+    {
+        if (php_sapi_name() !== 'cli') {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+        }
     }
 
 
