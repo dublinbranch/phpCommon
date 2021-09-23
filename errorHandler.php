@@ -61,8 +61,9 @@ function invalidError($errorMessage): bool
         "/seek?q=ciao%20bruno",
         "swiftlinux.com",
         "/ar?gclid=&layout=&mkt=&o=&q=&rtb=",
-        "adminer_plugins"
-
+        "adminer_plugins",
+	"piwik2.trott",
+	"clickHouse/adminer"
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
@@ -109,7 +110,7 @@ function handleError(?array $error): void
             $key = 'errorTrackerTS';
             $lastTS = apcu_fetch($key);
             $difference = time() - $lastTS;
-            if (strlen($error["message"]) > 0 && (!$lastTS || $difference > $config->TTL)) {
+            if (strlen($error["message"]) > 0 && (!$lastTS || $difference > $config->ttl)) {
                 apcu_store($key, time());
                 $f = $_SERVER["SCRIPT_FILENAME"];
                 $ref = isset($_SERVER['HTTP_REFERER']) ? ("and referrer " . $_SERVER['HTTP_REFERER']) : NULL;
