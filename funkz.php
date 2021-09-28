@@ -126,7 +126,8 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     function sessionSafeStart()
     {
         if (php_sapi_name() !== 'cli') {
-            if (session_status() === PHP_SESSION_NONE) {
+            // header_sent because sometimes we have to open and close session
+            if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
                 session_start();
             }
         }
