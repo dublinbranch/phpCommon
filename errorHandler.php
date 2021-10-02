@@ -63,7 +63,8 @@ function invalidError($errorMessage): bool
         "/ar?gclid=&layout=&mkt=&o=&q=&rtb=",
         "adminer_plugins",
 	"piwik2.trott",
-	"clickHouse/adminer"
+	"clickHouse/adminer",
+	"ad.atdmt.com"
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {
