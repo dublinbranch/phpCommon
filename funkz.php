@@ -430,5 +430,12 @@ if (!function_exists("dummyPhpCommonFunkz")) {
                 . ((isset($url['fragment'])) ? '#' . $url['fragment'] : '');
         }
     }
+
+    function hasRefUrl(): int
+    {
+        $hasRefUrl = isset($_SERVER["HTTP_REFERER"]) && !empty($_SERVER["HTTP_REFERER"]) ? 1 : 0;
+        return $hasRefUrl;
+    }
+
 }//End of includeGuard
 
