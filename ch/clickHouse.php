@@ -1,5 +1,14 @@
 <?php
+/*
+Come usare la classe ?
 
+$ch = new ClickHouse("http://127.0.0.1:8123");
+$res = $ch->query("SELECT today()");
+if (!$res) {
+    var_dump($ch->errorMsg);
+    die();
+}
+ */
 if (!function_exists("clickHouseHandler")) {
     function clickHouseHandler()
     {
