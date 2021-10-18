@@ -438,5 +438,19 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return $hasRefUrl;
     }
 
+    // Format must be 00:00 => 23:59 https://stackoverflow.com/questions/27131527/php-check-if-time-is-between-two-times-regardless-of-date/27134087
+    function isInTimeRange_Hi(string $from, string $to, string $now, string $timezone): bool
+    {
+        $tz = new DateTimeZone($timezone);
+        $from = DateTime::createFromFormat('!H:i', $from, $tz);
+        $to = DateTime::createFromFormat('!H:i', $to, $tz);
+        $now = DateTime::createFromFormat('!H:i', $now, $tz);
+        if ($from > $to) {
+            $to->modify('+1 day');
+        }
+        $result = ($from <= $now && $now <= $to) || ($from <= $now->modify('+1 day') && $now <= $to);
+        return $result;
+    }
+
 }//End of includeGuard
 
