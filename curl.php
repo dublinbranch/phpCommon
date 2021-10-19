@@ -8,7 +8,7 @@ class PingerReq
         $this->maxTries = $maxTries;
     }
 
-    public function new(string $url, int $maxTries = 5): PingerReq
+    static public function new(string $url, int $maxTries = 5): PingerReq
     {
         return new PingerReq($url, $maxTries);
     }
