@@ -43,16 +43,34 @@ class PingerRes
         if ($this->header) {
             $header = "Header: " . print_r($this->header, true);
         }
+
         $msg = <<<EOD
 For url: {$this->req->url}
 Used Ip: {$this->info["primary_ip"]}  |  Response: {$this->info["http_code"]}
 {$header}
 EOD;
-
+        $msg .= "\n" . $this->getTiming();
         if (!$this->ok) {
             $msg .= "\nFailure after: {$this->tries}, error is: $this->error";
+        }else{
+            
+            $res = "no response";
+            if ($this->res) {
+                $len = strlen($this->res);
+                if ($len) {
+                    $res = "Response($len byte) ";
+                    $maxSize = 4096;
+                    if ($len > $maxSize) {
+                        $res .= " truncated to $maxSize :\n" . substr($this->res, 0, $maxSize);
+                    } else {
+                        $res .= ":\n" . $this->res;
+                    }
+                }
+            }
+
+            $msg .= "\n" . $res;
         }
-        $msg .= "\n" . $this->getTiming();
+
         return $msg;
 
     }
