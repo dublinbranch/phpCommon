@@ -8,6 +8,16 @@ class PingerReq
         $this->maxTries = $maxTries;
     }
 
+    public function new(string $url, int $maxTries = 5): PingerReq
+    {
+        return new PingerReq($url, $maxTries);
+    }
+
+    public function ping1($curl = null): PingerRes
+    {
+        return pinger1($this, $curl);
+    }
+
     public string $url;
     public int $maxTries = 3;
 }
@@ -98,7 +108,7 @@ function pinger1(PingerReq $req, $curl = null, array $curlOpts = array()): Pinge
     curl_setopt($ch, CURLOPT_URL, $req->url);
     //else will print the res -.-
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    if(!isset($curlOpts[CURLOPT_TIMEOUT])){
+    if (!isset($curlOpts[CURLOPT_TIMEOUT])) {
         // if time-out not set then we set a 5 seconds default
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     }
