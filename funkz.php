@@ -128,7 +128,8 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     function sessionSafeStart()
     {
         if (php_sapi_name() !== 'cli') {
-            if (session_status() === PHP_SESSION_NONE) {
+            // header_sent because sometimes we have to open and close session
+            if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
                 session_start();
             }
         }
@@ -432,5 +433,26 @@ if (!function_exists("dummyPhpCommonFunkz")) {
                 . ((isset($url['fragment'])) ? '#' . $url['fragment'] : '');
         }
     }
+
+    function hasRefUrl(): int
+    {
+        $hasRefUrl = isset($_SERVER["HTTP_REFERER"]) && !empty($_SERVER["HTTP_REFERER"]) ? 1 : 0;
+        return $hasRefUrl;
+    }
+
+    // Format must be 00:00 => 23:59 https://stackoverflow.com/questions/27131527/php-check-if-time-is-between-two-times-regardless-of-date/27134087
+    function isInTimeRange_Hi(string $from, string $to, string $now, string $timezone): bool
+    {
+        $tz = new DateTimeZone($timezone);
+        $from = DateTime::createFromFormat('!H:i', $from, $tz);
+        $to = DateTime::createFromFormat('!H:i', $to, $tz);
+        $now = DateTime::createFromFormat('!H:i', $now, $tz);
+        if ($from > $to) {
+            $to->modify('+1 day');
+        }
+        $result = ($from <= $now && $now <= $to) || ($from <= $now->modify('+1 day') && $now <= $to);
+        return $result;
+    }
+
 }//End of includeGuard
 

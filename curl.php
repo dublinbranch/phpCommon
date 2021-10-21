@@ -8,6 +8,16 @@ class PingerReq
         $this->maxTries = $maxTries;
     }
 
+    static public function new(string $url, int $maxTries = 5): PingerReq
+    {
+        return new PingerReq($url, $maxTries);
+    }
+
+    public function ping1($curl = null): PingerRes
+    {
+        return pinger1($this, $curl);
+    }
+
     public string $url;
     public int $maxTries = 3;
 }
@@ -33,16 +43,34 @@ class PingerRes
         if ($this->header) {
             $header = "Header: " . print_r($this->header, true);
         }
+
         $msg = <<<EOD
 For url: {$this->req->url}
 Used Ip: {$this->info["primary_ip"]}  |  Response: {$this->info["http_code"]}
 {$header}
 EOD;
-
+        $msg .= "\n" . $this->getTiming();
         if (!$this->ok) {
             $msg .= "\nFailure after: {$this->tries}, error is: $this->error";
+        }else{
+            
+            $res = "no response";
+            if ($this->res) {
+                $len = strlen($this->res);
+                if ($len) {
+                    $res = "Response($len byte) ";
+                    $maxSize = 4096;
+                    if ($len > $maxSize) {
+                        $res .= " truncated to $maxSize :\n" . substr($this->res, 0, $maxSize);
+                    } else {
+                        $res .= ":\n" . $this->res;
+                    }
+                }
+            }
+
+            $msg .= "\n" . $res;
         }
-        $msg .= "\n" . $this->getTiming();
+
         return $msg;
 
     }
@@ -98,7 +126,7 @@ function pinger1(PingerReq $req, $curl = null, array $curlOpts = array()): Pinge
     curl_setopt($ch, CURLOPT_URL, $req->url);
     //else will print the res -.-
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    if(!isset($curlOpts[CURLOPT_TIMEOUT])){
+    if (!isset($curlOpts[CURLOPT_TIMEOUT])) {
         // if time-out not set then we set a 5 seconds default
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     }
