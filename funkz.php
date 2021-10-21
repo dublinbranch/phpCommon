@@ -66,8 +66,10 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     {
         if (isset($_REQUEST['ip']) && filter_var($_REQUEST['ip'], FILTER_VALIDATE_IP)) {
             $ip = $_REQUEST['ip'];
-            //The followings are HEADER, not parameter
-        } else if (getenv('HTTP_CLIENT_IP')) {
+        } else if (isset($_REQUEST['REMOTE_ADDRESS'])) {
+            $ip = $_REQUEST['REMOTE_ADDRESS'];
+        } //The followings are HEADER, not parameter
+        else if (getenv('HTTP_CLIENT_IP')) {
             $ip = getenv('HTTP_CLIENT_IP');
         } else if (getenv('HTTP_X_FORWARDED_FOR')) {
             $ip = getenv('HTTP_X_FORWARDED_FOR');
