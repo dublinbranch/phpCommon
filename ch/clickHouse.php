@@ -40,6 +40,10 @@ if (!function_exists("clickHouseHandler")) {
                 $this->errorMsg = curl_error($this->ch);
                 return null;
             }
+            if (strpos($response, "Poco::Exception")) {
+                $this->errorMsg = $response;
+                return null;
+            }
             return $response;
         }
     }
