@@ -436,8 +436,9 @@ if (!function_exists("dummyPhpCommonFunkz")) {
 
     function hasRefUrl(): int
     {
+        $a = isset($_GET["refUrl"]) && strlen($_GET["refUrl"]);
         $hasRefUrl = isset($_SERVER["HTTP_REFERER"]) && !empty($_SERVER["HTTP_REFERER"]) ? 1 : 0;
-        return $hasRefUrl;
+        return $hasRefUrl || $a;
     }
 
     // Format must be 00:00 => 23:59 https://stackoverflow.com/questions/27131527/php-check-if-time-is-between-two-times-regardless-of-date/27134087
