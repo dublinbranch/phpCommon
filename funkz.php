@@ -487,13 +487,17 @@ SQL;
         return sizeof($info) > 0;
     }
 
-    function getLastTableUpdate(DBWrapper $db, string $tableName, string $databaseName)
+    function getLastTableUpdateOrCreateTs(DBWrapper $db, string $tableName, string $databaseName)
     {
         $info = getInformationSchema($db, $tableName, $databaseName);
-        if(!isset($info[0]) && !isset($info[0]->UPDATE_TIME)){
+        if(!isset($info[0]) && (!isset($info[0]->UPDATE_TIME) || !isset($info[0]->CREATE_TIME))){
             throw new Exception('unable to get infos');
         }
-        $ts = strtotime($info[0]->UPDATE_TIME);
+        if(isset($info[0]->UPDATE_TIME)) {
+            $ts = strtotime($info[0]->UPDATE_TIME);
+        }elseif(isset($info[0]->CREATE_TIME)) {
+            $ts = strtotime($info[0]->CREATE_TIME);
+        }
         return $ts;
     }
 
