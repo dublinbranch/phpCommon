@@ -452,5 +452,47 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return $result;
     }
 
+    function getInformationSchema(DBWrapper $db, string $tableName = "", string $databaseName = "") : array
+    {
+        if(empty($tableName) && empty($databaseName)){
+            throw new Exception('table name or database name must be defined');
+        }
+        $skel = <<<SQL
+SELECT *
+FROM information_schema.tables
+WHERE 
+SQL;
+        $wheres = array();
+        $values = array();
+        if(!empty($tableName)){
+            $wheres[] = 'table_name = %s';
+            $values[] = base64this($tableName);
+        }
+        if(!empty($databaseName)){
+            $wheres[] = 'table_schema = %s';
+            $values[] = base64this($databaseName);
+        }
+        $skel .= implode(' AND ', $wheres);
+        $query = vsprintf($skel,$values);
+        $result = $db->getAllObj($query);
+        return $result;
+    }
+
+    function doesTableExist(DBWrapper $db, string $tableName, string $databaseName) : bool
+    {
+        $info = getInformationSchema($db, $tableName, $databaseName);
+        return sizeof($info) > 0;
+    }
+
+    function getLastTableUpdate(DBWrapper $db, string $tableName, string $databaseName)
+    {
+        $info = getInformationSchema($db, $tableName, $databaseName);
+        if(!isset($info[0]) && !isset($info[0]->UPDATE_TIME)){
+            throw new Exception('unable to get infos');
+        }
+        $ts = strtotime($info[0]->UPDATE_TIME);
+        return $ts;
+    }
+
 }//End of includeGuard
 
