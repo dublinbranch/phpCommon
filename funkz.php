@@ -66,8 +66,10 @@ if (!function_exists("dummyPhpCommonFunkz")) {
     {
         if (isset($_REQUEST['ip']) && filter_var($_REQUEST['ip'], FILTER_VALIDATE_IP)) {
             $ip = $_REQUEST['ip'];
-            //The followings are HEADER, not parameter
-        } else if (getenv('HTTP_CLIENT_IP')) {
+        } else if (isset($_REQUEST['REMOTE_ADDRESS'])) {
+            $ip = $_REQUEST['REMOTE_ADDRESS'];
+        } //The followings are HEADER, not parameter
+        else if (getenv('HTTP_CLIENT_IP')) {
             $ip = getenv('HTTP_CLIENT_IP');
         } else if (getenv('HTTP_X_FORWARDED_FOR')) {
             $ip = getenv('HTTP_X_FORWARDED_FOR');
@@ -434,8 +436,9 @@ if (!function_exists("dummyPhpCommonFunkz")) {
 
     function hasRefUrl(): int
     {
-        $hasRefUrl = isset($_SERVER["HTTP_REFERER"]) && !empty($_SERVER["HTTP_REFERER"]) ? 1 : 0;
-        return $hasRefUrl;
+        $hasRefUrlGet = isset($_GET["refUrl"]) && strlen($_GET["refUrl"]);
+        $hasRefUrlServer = isset($_SERVER["HTTP_REFERER"]) && !empty($_SERVER["HTTP_REFERER"]) ? 1 : 0;
+        return $hasRefUrlServer || $hasRefUrlGet;
     }
 
     // Format must be 00:00 => 23:59 https://stackoverflow.com/questions/27131527/php-check-if-time-is-between-two-times-regardless-of-date/27134087
