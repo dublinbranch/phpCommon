@@ -64,7 +64,8 @@ function invalidError($errorMessage): bool
         "adminer_plugins",
 	"piwik2.trott",
 	"clickHouse/adminer",
-	"ad.atdmt.com"
+	"ad.atdmt.com",
+	"matomo"
     );
     foreach ($excludeds as $excluded) {
         if (stripos($errorMessage, $excluded) !== false) {

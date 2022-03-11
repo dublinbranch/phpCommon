@@ -9,6 +9,7 @@ if (!$res) {
     die();
 }
  */
+//TODO aggiungere le opzioni per loggare on error 
 if (!function_exists("clickHouseHandler")) {
     function clickHouseHandler()
     {
@@ -18,7 +19,10 @@ if (!function_exists("clickHouseHandler")) {
     {
         private string $remote;
         private $ch;
-        public ?string $errorMsg = null;
+	public ?string $errorMsg = null;
+	//It depends a lot on what you are doing, running a select ? ok increase, doing massive amount of insert keep as low as possible
+	//we just pool them togheter so better to be quick in case is having problem and processing remains struct
+	public float $timeoutMS = 1000;
 
         /**
          * @param string $remote MUST contain the user and password and port so something link
@@ -32,8 +36,8 @@ if (!function_exists("clickHouseHandler")) {
             curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($this->ch, CURLOPT_HEADER, 0);
             curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($this->ch, CURLOPT_VERBOSE, 0);
-
+	    curl_setopt($this->ch, CURLOPT_VERBOSE, 0);
+	    curl_setopt($this->ch, CURLOPT_TIMEOUT_MS, $this->timeoutMS);
         }
 
         public function query($sql): ?string
