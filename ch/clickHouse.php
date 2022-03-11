@@ -20,6 +20,10 @@ if (!function_exists("clickHouseHandler")) {
         private $ch;
         public ?string $errorMsg = null;
 
+        /**
+         * @param string $remote MUST contain the user and password and port so something link
+         * http://USER:PASSWORD@DOMAIN:PORT
+         */
         public function ClickHouse(string $remote)
         {
             $this->remote = $remote;
@@ -34,10 +38,15 @@ if (!function_exists("clickHouseHandler")) {
 
         public function query($sql): ?string
         {
+            $this->errorMsg = null;
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $sql);
             $response = curl_exec($this->ch);
             if (curl_errno($this->ch)) {
                 $this->errorMsg = curl_error($this->ch);
+                return null;
+            }
+            if (strpos($response, "::Exception")) {
+                $this->errorMsg = $response;
                 return null;
             }
             if (strpos($response, "Poco::Exception")) {
