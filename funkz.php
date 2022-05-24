@@ -455,9 +455,9 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         return $result;
     }
 
-    function getInformationSchema(DBWrapper $db, string $tableName = "", string $databaseName = "") : array
+    function getInformationSchema(DBWrapper $db, string $tableName = "", string $databaseName = ""): array
     {
-        if(empty($tableName) && empty($databaseName)){
+        if (empty($tableName) && empty($databaseName)) {
             throw new Exception('table name or database name must be defined');
         }
         $skel = <<<SQL
@@ -467,21 +467,21 @@ WHERE
 SQL;
         $wheres = array();
         $values = array();
-        if(!empty($tableName)){
+        if (!empty($tableName)) {
             $wheres[] = 'table_name = %s';
             $values[] = base64this($tableName);
         }
-        if(!empty($databaseName)){
+        if (!empty($databaseName)) {
             $wheres[] = 'table_schema = %s';
             $values[] = base64this($databaseName);
         }
         $skel .= implode(' AND ', $wheres);
-        $query = vsprintf($skel,$values);
+        $query = vsprintf($skel, $values);
         $result = $db->getAllObj($query);
         return $result;
     }
 
-    function doesTableExist(DBWrapper $db, string $tableName, string $databaseName) : bool
+    function doesTableExist(DBWrapper $db, string $tableName, string $databaseName): bool
     {
         $info = getInformationSchema($db, $tableName, $databaseName);
         return sizeof($info) > 0;
@@ -490,15 +490,46 @@ SQL;
     function getLastTableUpdateOrCreateTs(DBWrapper $db, string $tableName, string $databaseName)
     {
         $info = getInformationSchema($db, $tableName, $databaseName);
-        if(!isset($info[0]) && (!isset($info[0]->UPDATE_TIME) || !isset($info[0]->CREATE_TIME))){
+        if (!isset($info[0]) && (!isset($info[0]->UPDATE_TIME) || !isset($info[0]->CREATE_TIME))) {
             throw new Exception('unable to get infos');
         }
-        if(isset($info[0]->UPDATE_TIME)) {
+        if (isset($info[0]->UPDATE_TIME)) {
             $ts = strtotime($info[0]->UPDATE_TIME);
-        }elseif(isset($info[0]->CREATE_TIME)) {
+        } elseif (isset($info[0]->CREATE_TIME)) {
             $ts = strtotime($info[0]->CREATE_TIME);
         }
         return $ts;
+    }
+
+    /*
+     * cbsBing ->
+     * oCode, adUnitId = NULL
+     *
+     * iacBing, iacYahoo ->
+     * adUnitId, oCode = NULL
+     */
+    function getAgencyIdFromTrackingCoordinates(DBWrapper $db, int $rty, ?int $oCode = null, ?string $adUnitId = null): ?int
+    {
+        // check if it is an external agency
+
+        $oCodeCondition = is_null($oCode) ? "" : "AND oCode = {$oCode}";
+        $adUnitIdCondition = is_null($adUnitId) ? "" : "AND adUnit = {$adUnitId}";
+
+        $skel = <<<MYSQL
+SELECT rangeId, agencyId FROM externalAgencies.rangeView WHERE rtyStart <= %d AND rtyEnd >= %d %s %s 
+MYSQL;
+        $sql = sprintf($skel, $rty, $rty, $oCode, $adUnitId);
+        $res = $db->getAllObj($sql);
+
+        if(){
+
+        }
+
+        if(sizeof($res) > 1){
+            // error
+        }
+
+
     }
 
 }//End of includeGuard
