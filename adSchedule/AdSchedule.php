@@ -31,7 +31,7 @@ HTML;
         //sunday at the end
         $table .= $this->scanLine($res, 1);
         $table .= <<<HTML
-    </tbody> 
+    </tbody>
 </table>
 <input type='hidden' name='{$id}_schedule' class='{$id}_schedule'>
 <script>
@@ -105,8 +105,11 @@ HTML;
         return false;
     }
 
-    private function roller($json)
+    public static function roller(string $json, string $table, int $campaignId, DBWrapper $db): void
     {
+        if(empty($json)){
+            return;
+        }
         /*global $dbConfs7 , $cidQuery , $comparisonid , $comparisonTable , $devMode;
         $db = new DBWrapper($dbConfs7);
         $campaignId = $db->getLine( $cidQuery )->cId;
@@ -125,28 +128,26 @@ HTML;
             //scan all the hour to find disconnection point
             foreach ($hours as $key => $hour) {
                 if ($hour == true) { //If the hour is active
-                    if ($active) {
-                        //do nothing
-                    } else {
+                    if (!$active) {
                         $active = true; //start a new range
                         $start_hour = $key;
                     }
                 } else { //if the hour is inactive
                     if ($active) {//if we are at the end of an active range
                         $end_hour = $key - 1;
-                        $campaignId = 123;
                         $sql = <<<EOD
-INSERT INTO turboProp.gdnAdSchedule SET
-gdnCampaignId = $gdnCampaignId
-,day_of_week = $day
-,start_hour = $start_hour
-,start_minute = 1 
-,end_hour = $end_hour
-,end_minute = 1
-;
+INSERT INTO
+    {$table}
+SET
+    campaignId = {$campaignId},
+    gdnCampaignId = 0,
+    day_of_week = {$day},
+    start_hour = {$start_hour},
+    start_minute = 1,
+    end_hour = {$end_hour},
+    end_minute = 1;
 EOD;
                         $sqlBuffer[] = $sql;
-                        $sqlBuffer[] = str_replace("turboProp","turboPropTemp",$sql);
                     }
                     $active = false; //terminate range
                 }
@@ -155,15 +156,13 @@ EOD;
         }
 
 
-        /*$delete = "DELETE FROM turboProp.gdnAdSchedule WHERE gdnCampaignId = $gdnCampaignId;";
-        $db->query($delete);
-        $delete = "DELETE FROM turboPropTemp.gdnAdSchedule WHERE gdnCampaignId = $gdnCampaignId;";
+        $delete = "DELETE FROM {$table} WHERE campaignId = {$campaignId};";
         $db->query($delete);
         foreach ($sqlBuffer as $query) {
             $db->query($query);
         }
 
-        if( ! $devMode ){
+        /*if( ! $devMode ){
             $url = "http://127.0.0.1:9025/?comparisonId={$comparisonid}&action=campaignAdSchedule&comparisonTable={$comparisonTable}";
             $result = file_get_contents( $url );
         }else{
