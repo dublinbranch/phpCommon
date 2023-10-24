@@ -151,6 +151,13 @@ if (!function_exists("dummyPhpCommonFunkz")) {
         }
     }
 
+    function arrayIfSetAny($array, $keys){
+        foreach ($keys as $key){
+            return arrayIfSet($array,$key);
+        }
+    }
+
+
     function base64FromUrlSafeB64(string $original): string
     {
         $original = str_replace("_", "/", $original);
